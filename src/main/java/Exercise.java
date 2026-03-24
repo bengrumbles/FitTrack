@@ -17,8 +17,16 @@ public class Exercise {
         this.numberOfSets--;
     }
 
+    public int getNumberOfSets(){
+        return this.numberOfSets;
+    }
+
     public void setExerciseDescription(String description){
         this.exerciseDescription = description;
+    }
+
+    public String getExerciseDescription(){
+        return this.exerciseDescription;
     }
 
     @Override

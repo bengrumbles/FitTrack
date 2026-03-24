@@ -5,5 +5,3 @@ public class Strength extends Exercise{
         super(name, numberOfSets);
     }
 }
-
-//Adding a comment here
