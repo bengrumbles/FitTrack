@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FitForge — Workout Builder</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="container">
+    <header class="site-header">
+        <div class="brand">Fit<span class="accent">Forge</span></div>
+        <nav class="nav">
+            <a th:href="@{/}">Builder</a>
+            <a th:href="@{/history}">History</a>
+        </nav>
+    </header>
+
+    <p class="intro">
+        Choose a workout template and a difficulty plan, then <strong>Preview</strong>
+        to build a session. Click <strong>Save</strong> to log it to your history.
+    </p>
+
+    <form th:action="@{/preview}" method="post" class="builder">
+        <div class="field">
+            <label for="template">Template</label>
+            <select id="template" name="template">
+                <option th:each="t : ${templates}"
+                        th:value="${t}"
+                        th:text="${t}"
+                        th:selected="${t == selectedTemplate}"></option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label for="plan">Plan</label>
+            <select id="plan" name="plan">
+                <option th:each="p : ${plans}"
+                        th:value="${p}"
+                        th:text="${p}"
+                        th:selected="${p == selectedPlan}"></option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Preview</button>
+        <button type="submit" th:formaction="@{/save}" class="btn btn-secondary">Save to History</button>
+    </form>
+
+    <section th:if="${workout != null}">
+        <div class="workout-name" th:text="${workout.name}">Workout</div>
+
+        <div class="phase">
+            <h3>Warmup</h3>
+            <ul class="exercise-list">
+                <li class="exercise" th:each="e : ${workout.warmup}">
+                    <div class="exercise-header">
+                        <span class="exercise-name" th:text="${e.name}">Name</span>
+                        <span class="badge" th:classappend="${'badge-' + e.type}" th:text="${e.type}">type</span>
+                        <span class="exercise-meta" th:text="${e.describe()}">summary</span>
+                    </div>
+                    <div class="exercise-cue" th:if="${!#strings.isEmpty(e.cues)}" th:text="${e.cues}"></div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="phase">
+            <h3>Main</h3>
+            <ul class="exercise-list">
+                <li class="exercise" th:each="e : ${workout.main}">
+                    <div class="exercise-header">
+                        <span class="exercise-name" th:text="${e.name}">Name</span>
+                        <span class="badge" th:classappend="${'badge-' + e.type}" th:text="${e.type}">type</span>
+                        <span class="exercise-meta" th:text="${e.describe()}">summary</span>
+                    </div>
+                    <div class="exercise-cue" th:if="${!#strings.isEmpty(e.cues)}" th:text="${e.cues}"></div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="phase">
+            <h3>Cooldown</h3>
+            <ul class="exercise-list">
+                <li class="exercise" th:each="e : ${workout.cooldown}">
+                    <div class="exercise-header">
+                        <span class="exercise-name" th:text="${e.name}">Name</span>
+                        <span class="badge" th:classappend="${'badge-' + e.type}" th:text="${e.type}">type</span>
+                        <span class="exercise-meta" th:text="${e.describe()}">summary</span>
+                    </div>
+                    <div class="exercise-cue" th:if="${!#strings.isEmpty(e.cues)}" th:text="${e.cues}"></div>
+                </li>
+            </ul>
+        </div>
+    </section>
+</div>
+</body>
+</html>

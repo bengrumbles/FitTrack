@@ -1,1 +1,1 @@
-rootProject.name = "FitTrack"
+rootProject.name = "fitforge"

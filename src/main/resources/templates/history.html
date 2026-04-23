@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FitForge — Workout History</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="container">
+    <header class="site-header">
+        <div class="brand">Fit<span class="accent">Forge</span></div>
+        <nav class="nav">
+            <a th:href="@{/}">Builder</a>
+            <a th:href="@{/history}">History</a>
+        </nav>
+    </header>
+
+    <h1 style="margin-top:0;">Workout History</h1>
+
+    <div class="stats-row" th:if="${!#lists.isEmpty(sessions)}">
+        <div class="stat">
+            <div class="stat-label">Workouts saved</div>
+            <div class="stat-value" th:text="${#lists.size(sessions)}">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Total exercises</div>
+            <div class="stat-value" th:text="${totalExercises}">0</div>
+        </div>
+    </div>
+
+    <div class="empty-state" th:if="${#lists.isEmpty(sessions)}">
+        <h3>No saved workouts yet</h3>
+        <p>Head to the <a th:href="@{/}">builder</a> to create one.</p>
+    </div>
+
+    <div th:each="s : ${sessions}" class="session">
+        <div class="session-head">
+            <div>
+                <span class="session-title" th:text="${s.workoutName}">Workout</span>
+                <span class="plan-chip" th:text="${s.planId}">plan</span>
+            </div>
+            <div class="session-meta">
+                <span th:text="${s.exerciseCount()} + ' exercises'">n</span> ·
+                <span th:text="${s.completedAt}">time</span>
+            </div>
+        </div>
+        <ul class="exercise-list">
+            <li class="exercise" th:each="rec : ${s.exercises}">
+                <div class="exercise-header">
+                    <span class="exercise-name" th:text="${rec.name}">name</span>
+                    <span class="badge" th:classappend="${'badge-' + rec.type}" th:text="${rec.type}">type</span>
+                    <span class="exercise-meta" th:text="${rec.summary}">summary</span>
+                </div>
+                <div class="exercise-cue" th:if="${rec.cues != null and !#strings.isEmpty(rec.cues)}"
+                     th:text="${rec.cues}"></div>
+            </li>
+        </ul>
+    </div>
+
+    <form th:if="${!#lists.isEmpty(sessions)}"
+          th:action="@{/history/clear}" method="post" class="history-actions"
+          onsubmit="return confirm('Delete all saved workouts? This cannot be undone.');">
+        <button type="submit" class="btn btn-danger">Clear all history</button>
+    </form>
+</div>
+</body>
+</html>
